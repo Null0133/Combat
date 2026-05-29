@@ -24,4 +24,18 @@ public class combat{
 
             return new diceResult(sum, Rolls);
     }
+    private static void aiCardPicking(int aiType, int aiHealth, int ){
+        int cardId = 1;
+        switch (aiType) {
+            case 1:
+                
+                break;
+            default:
+                break;
+        }
+        return cardId;
+    }
+    private static void playerTurn(){
+
+    }
 }
