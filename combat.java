@@ -14,7 +14,7 @@ public class combat{
 
             Random random = new Random();
             int sum = 0;
-            List<Integer> Rolls = new ArrayList<>();
+            ArrayList<Integer> Rolls = new ArrayList<>();
 
             for(int i = 0; i<num;i++){
                 int role = random.nextInt(1,sides + 1);

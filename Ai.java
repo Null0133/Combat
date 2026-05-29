@@ -1,7 +1,4 @@
 public class Ai {
-    
-}
-class ai{
     public int aiType;
     public String name;
     public int aiHealth;
@@ -9,7 +6,7 @@ class ai{
     public int aiSpeed;
     public int aiCMV;
 
-    public ai(int aiType, String name, int aiHealth, int aiDef, int aiSpeed, int aiCMV){
+    public Ai(int aiType, String name, int aiHealth, int aiDef, int aiSpeed, int aiCMV){
         this.name = name;
         this.aiHealth = aiHealth;
         this.aiDef = aiDef;
