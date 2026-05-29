@@ -3,9 +3,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 record diceResult(int sum, List<Integer> rolls) {}
-
 public class combat{
+    
     public static void main(String[] args) {   //replace main with the combat start string thingy
+        character player = new character();
         Cards.cards();
         System.out.println(Cards.getCardsByType(2));
     }
@@ -24,7 +25,7 @@ public class combat{
 
             return new diceResult(sum, Rolls);
     }
-    private static void aiCardPicking(int aiType, int aiHealth, int ){
+    private static void aiCardPicking(int aiType, int aiHealth ){
         int cardId = 1;
         switch (aiType) {
             case 1:
