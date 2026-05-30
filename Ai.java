@@ -72,7 +72,7 @@ public class Ai {
                 }
                 break;
         }
-        int temp = random.nextInt(1,10);
+        int temp = random.nextInt(1,20); // randomly picks a random card with no logic (change upper value to change the probablility of this occuring) (1 in 20 rn)
         if (temp == 10){
             int length = Cards.getCardsByType(1).size() + Cards.getCardsByType(2).size() + Cards.getCardsByType(3).size();
             ArrayList<Integer> Temp = new ArrayList<>(Cards.getCardsByType(3));

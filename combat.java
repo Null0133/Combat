@@ -39,14 +39,9 @@ public class combat{
         ArrayList<String> EmptyArrayf = new ArrayList<String>();
         EmptyArrayf.add("test");
         EmptyArrayf.add("test2");
-        startBattle(mainCharacter.getDeck(), EmptyArrayf, EmptyArrayi, EmptyArrayi, EmptyArrayi, EmptyArrayi);
+        boolean didwewin = startBattle(mainCharacter.getDeck(), EmptyArrayf, EmptyArrayi, EmptyArrayi, EmptyArrayi, EmptyArrayi, null);
+        System.out.println(didwewin);
     }
-
-
-
-    
-    
-
 
     public void Battle(String BattleID, int numberOfWaves, /*Coin[] rewardedCoins,*/ ArrayList<String> rewardedPassives, ArrayList<String> rewardedKeyItems, ArrayList<String> EnemiesList, ArrayList<Integer> EnemiesListType, ArrayList<Integer> EnemiesListDef, ArrayList<Integer> EnemiesListCmv, ArrayList<Integer> EnemiesListHp){
 
@@ -65,12 +60,13 @@ public class combat{
     //// ADD INVENTORY WHEN MERGING (or ask kai if my thing is still tweaking)
     
     ///all values that are not specifically maincharacter abc are enemy values
-    public boolean startBattle(List<Integer> activedeck, List<String> enemyList, List<Integer> type, List<Integer> Def, List<Integer> CMV, List<Integer> HP){
+    public boolean startBattle(ArrayList<Integer> activedeck, ArrayList<String> enemyList, ArrayList<Integer> type, ArrayList<Integer> Def, ArrayList<Integer> CMV, ArrayList<Integer> HP, String BattleID){
         System.out.println("Combat start");
         Random random = new Random();
         ArrayList<Integer> currentHand = new ArrayList<>();
         ArrayList<Integer> discarded = new ArrayList<>();
         ArrayList<Integer> drawpile = new ArrayList<>();
+        int waves = 0;
 
         drawpile.addAll(activedeck);
         Collections.shuffle(drawpile);
@@ -91,12 +87,40 @@ public class combat{
             aiList.add(new Ai(type.get(i), enemyList.get(i), HP.get(i), Def.get(i), CMV.get(i)));
         }
 
-        return false;
+        //creating a sum of HP for win/ lose / move on to next wave conditions
+        if  (HP.size()>4){ // this means we have a second wave
+            waves = 1;
+        }
+        int sumHp = 0;
+        for (int i = 0; i<=HP.size(); i++){
+            sumHp += HP.get(i);
+        }
+
+        int sumHpMax = sumHp; // so i can check if i need to spawn in second wave of enemies
+        int turnTally = 0;
+        while (sumHp > 0 || mainCharacter.getHp() == 0){
+            if (turnTally % 3 ==0){
+                System.out.println("COIN TOSS EVENT");
+                // set up once access to coin class is avaliable in main
+                mainCharacter.changePwr(-3); //-3 because it takes the value and subtracts it from the power value
+            }
+            if (waves == 1 && sumHpMax/2<= sumHp){
+                //////////////////////////Spawn Second Half
+                //sumHp = sumHpMax/2;
+            }
+            for (String unit : combatOrder) {
+                if (unit == "Player"){
+                    playerOutputBundle cards =  playerTurn(currentHand, enemyList, HP, combatOrder);
+                    
+                }
+            }
+        }
+         return false;
     }////////////////////////////////INTEGRATE THE COIN TOSS EVERY THIRD TURN (for now make it give a random amount of power)(maybe randomize the buffs later)
 
     public record playerOutputBundle(List<Integer> hand, List<Integer> discard, List<Integer> play) {} //used to get more than one array in out put 
 
-    public playerOutputBundle playerTurn(ArrayList<Integer> currentHand, ArrayList<String> enemyList, ArrayList<Integer> enemyHp, ArrayList<String> combatOrder, int power){ //player more or less picking their cards
+    public playerOutputBundle playerTurn(ArrayList<Integer> currentHand, ArrayList<String> enemyList, ArrayList<Integer> enemyHp, ArrayList<String> combatOrder){ //player more or less picking their cards
         
         System.out.println("All Enemies In Combat Order"); //Displays the Combat order
         for (int i = 0; i<= enemyList.size() - 1; i++){
@@ -184,7 +208,7 @@ public class combat{
                                 if (mainCharacter.getPwr() > Cards.cardDictionary.get(currentHand.get(i)).cost){
                                     System.out.print("The Card has been added to the to be played cards list");
                                     playedCards.add(currentHand.get(i));
-                                    mainCharacter.changePwr(Cards.cardDictionary.get(currentHand.get(i)).cost);
+                                    mainCharacter.changePwr(-1 * Cards.cardDictionary.get(currentHand.get(i)).cost);
                                     System.out.print("This has consumed " + Cards.cardDictionary.get(currentHand.get(i)).cost + "power, you have " + mainCharacter.getPwr() + "power left");
                                 }
                                 
