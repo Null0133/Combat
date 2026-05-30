@@ -2,6 +2,7 @@ import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Collections;
+import java.util.Scanner;
 
 record diceResult(int sum, List<Integer> rolls) {}
 public class combat{
@@ -61,7 +62,7 @@ public class combat{
 
     //// ADD INVENTORY WHEN MERGING (or ask kai if my thing is still tweaking)
     
-    //all values that are not specifically maincharacter.XXX are enemy values 
+    ///all values that are not specifically maincharacter XXX are enemy values 
     public boolean startBattle(List<Integer> activedeck, List<String> enemyList, List<Integer> type, List<Integer> Def, List<Integer> CMV, List<Integer> HP){
         System.out.println("Combat start");
         Random random = new Random();
@@ -89,20 +90,38 @@ public class combat{
         }
 
         return false;
-    }
-    public void playerTurn(ArrayList<Integer> currentHand, ArrayList<Integer> enemyHp, ArrayList<String> combatOrder, int power){
+    }////////////////////////////////INTEGRATE THE COIN TOSS EVERY THIRD TURN (for now make it give a random amount of power)(maybe randomize the buffs later)
+    public void playerTurn(ArrayList<Integer> currentHand, ArrayList<String> enemyList, ArrayList<Integer> enemyHp, ArrayList<String> combatOrder, int power){
+        System.out.println("All Enemies In Combat Order"); //Displays the Combat order
+        for (int i = 0; i<= enemyList.size() - 1; i++){
+            
+            if (combatOrder.get(i) != "Player"){
+                int ehp = 20;
+                System.out.println("Order No " + i + " : " + combatOrder.get(i));
+                for (String enemy : combatOrder) {
+                    if (enemy == enemyList.get(i)){
+                        ehp = enemyHp.get(i);
+                    }
+                }
+                System.out.print("Hp: " + ehp);
+            }
+            else{
+                System.out.println("Order No " + i + " : Player");
+                System.out.println("Hp: " + mainCharacter.getHp());
+            }
+        }
+
+        System.out.println("Dealt Cards"); //Displays the cards you have been given
         for (int i = 0; i<=3; i++){
             System.out.println("Card ID: " + currentHand.get(i));
             System.out.print("Cost of card " + Cards.cardDictionary.get(currentHand.get(i)).cost);
             System.out.print(Cards.cardDictionary.get(currentHand.get(i)).display);
         }
-
+        
+        System.out.println("You have " + mainCharacter.getPwr() + "power to use:");
         ArrayList<Integer> playedCards = new ArrayList<>();
         ArrayList<Integer> discardedCards = new ArrayList<>();
-        ///Display Current cards in hand
-        /// Display enemy Hp values
-        /// Display Combat Order
-        /// player power amount 
+        System.out.println(discardedCards);
     }
     
     public static diceResult rollDice(int num,int sides){
