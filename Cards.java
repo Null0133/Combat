@@ -57,6 +57,7 @@ class CardDetails {
     int num2; //for the second action
     int dice2; //for the second action
     String display; //text that will be displayed to the user in the inventory / game
+    int cost;
 
     public CardDetails(int Type, int Num, int Dice, int Num2, int Dice2, String Display, int Cost){
         this.type = Type;
@@ -65,5 +66,6 @@ class CardDetails {
         this.num2 = Num2;
         this.dice2 = Dice2;
         this.display = Display;
+        this.cost = Cost;
     }
 }

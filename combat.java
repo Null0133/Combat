@@ -71,7 +71,7 @@ public class combat{
 
         drawpile.addAll(activedeck);
         Collections.shuffle(drawpile);
-        List<Integer> Pop = drawpile.subList(drawpile.size() - 4, drawpile.size());
+        List<Integer> Pop = drawpile.subList(drawpile.size() - 3, drawpile.size());
         currentHand.addAll(Pop);
         Pop.clear();
         System.out.println(currentHand);
@@ -89,6 +89,20 @@ public class combat{
         }
 
         return false;
+    }
+    public void playerTurn(ArrayList<Integer> currentHand, ArrayList<Integer> enemyHp, ArrayList<String> combatOrder, int power){
+        for (int i = 0; i<=3; i++){
+            System.out.println("Card ID: " + currentHand.get(i));
+            System.out.print("Cost of card " + Cards.cardDictionary.get(currentHand.get(i)).cost);
+            System.out.print(Cards.cardDictionary.get(currentHand.get(i)).display);
+        }
+
+        ArrayList<Integer> playedCards = new ArrayList<>();
+        ArrayList<Integer> discardedCards = new ArrayList<>();
+        ///Display Current cards in hand
+        /// Display enemy Hp values
+        /// Display Combat Order
+        /// player power amount 
     }
     
     public static diceResult rollDice(int num,int sides){
