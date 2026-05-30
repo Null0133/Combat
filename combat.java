@@ -6,6 +6,8 @@ import java.util.Scanner;
 
 record diceResult(int sum, List<Integer> rolls) {}
 public class combat{
+    private static final Scanner scanner = new Scanner(System.in);
+
     character mainCharacter = new character();
 
     private String BattleID;
@@ -92,6 +94,7 @@ public class combat{
         return false;
     }////////////////////////////////INTEGRATE THE COIN TOSS EVERY THIRD TURN (for now make it give a random amount of power)(maybe randomize the buffs later)
     public void playerTurn(ArrayList<Integer> currentHand, ArrayList<String> enemyList, ArrayList<Integer> enemyHp, ArrayList<String> combatOrder, int power){
+        
         System.out.println("All Enemies In Combat Order"); //Displays the Combat order
         for (int i = 0; i<= enemyList.size() - 1; i++){
             
@@ -121,7 +124,50 @@ public class combat{
         System.out.println("You have " + mainCharacter.getPwr() + "power to use:");
         ArrayList<Integer> playedCards = new ArrayList<>();
         ArrayList<Integer> discardedCards = new ArrayList<>();
-        System.out.println(discardedCards);
+        int input = 0;
+        while (input!=3){
+            System.out.println("Please select an action: \n 1. Select Cards to discard \n 2. Select Cards to play \n 3. Veiw Cards Again \n 4.Submit Actions");
+            input = scanner.nextInt();
+            switch (input) {
+                case 1:
+                    for (int i = 0; i <= 3; i++){
+                        System.out.println("Card ID: " + currentHand.get(i));
+                        System.out.print("Cost of card " + Cards.cardDictionary.get(currentHand.get(i)).cost);
+                        System.out.print(Cards.cardDictionary.get(currentHand.get(i)).display);
+                        System.out.println("would you like to discard this card? \n 1. Yes \n 2. No");
+                        int del = scanner.nextInt();
+                        if (del == 1){
+                            int check = 0;
+                            for (int card : playedCards) {
+                                check++;
+                                if (currentHand.get(i) == card){
+                                    System.out.print("You cannot discard a played card");
+                                    
+                                    break;
+                                }
+                            }
+                            if (check == 3){
+                                System.out.print("The Card has been added to the discard pile");
+                                discardedCards.add(currentHand.get(i));
+                            }
+                        }
+                        else{
+                            
+                        }
+                    }
+                    break;
+                case 2:
+                    break;
+                case 3:
+                    break;
+                case 4:
+                    break;
+                default:
+                    System.out.println("Error please make sure you enter 1 2 or 3");
+                   break;
+            }
+        }
+        
     }
     
     public static diceResult rollDice(int num,int sides){
