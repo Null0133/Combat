@@ -12,12 +12,12 @@ public class Cards{
         cardDictionary.put(1, new CardDetails(1,0,4,0,6,"Empty",0)); //Used for toubleshooting and ai default
         cardDictionary.put(1, new CardDetails(1,1,4,1,6,"1d4 a 1d6 a",1)); //Base Deck Given to player who finished the tutorial   
         cardDictionary.put(2, new CardDetails(1,1,6,2,4,"1d6 a 2d4 a",1)); 
-        cardDictionary.put(3, new CardDetails(2,1,4,1,4,"1d4 a 1d4 d(1)",1));        
-        cardDictionary.put(4, new CardDetails(2,1,6,2,6,"1d6 a 2d6 d(2)",1)); 
-        cardDictionary.put(5, new CardDetails(3,1,12,1,4,"1d12 d(2) 1d4 a",1));        
-        cardDictionary.put(6, new CardDetails(3,1,4,2,6,"1d4 d(1) 2d6 a",1)); 
-        cardDictionary.put(7, new CardDetails(4,1,4,1,6,"1d4 d1 1d6 d2",1));        
-        cardDictionary.put(8, new CardDetails(4,1,12,2,4,"1d12 d2 1d4 d1",1)); 
+        cardDictionary.put(3, new CardDetails(2,1,4,1,4,"1d4 a 1d4 d",1));        
+        cardDictionary.put(4, new CardDetails(2,1,6,2,6,"1d6 a 2d6 d",1)); 
+        cardDictionary.put(5, new CardDetails(3,1,12,1,4,"1d12 d 1d4 a",1));        //// DEF CHANGED LOWER TF OUT OF THEM >:D
+        cardDictionary.put(6, new CardDetails(3,1,4,2,6,"1d4 d 2d6 a",1)); 
+        cardDictionary.put(7, new CardDetails(4,1,4,1,6,"1d4 d 1d6 d",1));        
+        cardDictionary.put(8, new CardDetails(4,1,12,2,4,"1d12 d 1d4 d",1)); 
         cardDictionary.put(9, new CardDetails(5,1,4,1,4,"1d4 b 1d4 a",1));        
         cardDictionary.put(10, new CardDetails(5,1,2,2,4,"1d2 b 2d4 a",1)); //Base Deck Ends
     }

@@ -23,8 +23,26 @@ public class Ai {
     public void aiDmgTaken(int dmgtaken){
         aiHealth -= dmgtaken;
     }
+    public int getType(){
+        return aiType;
+    }
     public String getName(){
         return name;
+    }
+    public int getLC(){
+        return lastCard;
+    }
+    public int getHP(){
+        return aiHealth;
+    }
+    public int getMHP(){
+        return aiHealthMax;
+    }
+    public int getDef(){
+        return aiDef;
+    }
+    public int getCMVG(){
+        return aiCMV;
     }
 
     // Ai thought process different types of ai will have slightly different priorities in the trees based of their factions description

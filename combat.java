@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Collections;
 import java.util.Scanner;
 
+import javax.sound.midi.SysexMessage;
+
 record diceResult(int sum, List<Integer> rolls) {}
 public class combat{
     private static final Scanner scanner = new Scanner(System.in);
@@ -39,7 +41,7 @@ public class combat{
         ArrayList<String> EmptyArrayf = new ArrayList<String>();
         EmptyArrayf.add("test");
         EmptyArrayf.add("test2");
-        boolean didwewin = startBattle(mainCharacter.getDeck(), EmptyArrayf, EmptyArrayi, EmptyArrayi, EmptyArrayi, EmptyArrayi, null);
+        boolean didwewin = startBattle(mainCharacter.getDeck(), EmptyArrayf, EmptyArrayi, EmptyArrayi, EmptyArrayi, EmptyArrayi);
         System.out.println(didwewin);
     }
 
@@ -51,18 +53,32 @@ public class combat{
         this.rewardedKeyItems = rewardedKeyItems;
         this.rewardedPassives = rewardedPassives;
         this.EnemiesList = EnemiesList;
-        this.EnemiesListType = EnemiesListType;  //basically moving setup of enemies to 
+        this.EnemiesListType = EnemiesListType;
         this.EnemiesListDef = EnemiesListDef;
         this.EnemiesListCmv = EnemiesListCmv;
-        this.EnemiesListHp = EnemiesListHp;
+        this.EnemiesListHp = EnemiesListHp;    
     }
+    public ArrayList<String> getNamesL(){
+            return EnemiesList;
+        }
+        public ArrayList<Integer> getEnemiesTypesL(){
+            return EnemiesListType;
+        }
+        public ArrayList<Integer> getEnemyDefL(){
+            return EnemiesListDef;
+        }
+        public ArrayList<Integer> getEnemyCMVL(){
+            return EnemiesListCmv;
+        }
+        public ArrayList<Integer> getEnemyHPL(){
+            return EnemiesListHp;
+        }
 
     //// ADD INVENTORY WHEN MERGING (or ask kai if my thing is still tweaking)
     
     ///all values that are not specifically maincharacter abc are enemy values
-    public boolean startBattle(ArrayList<Integer> activedeck, ArrayList<String> enemyList, ArrayList<Integer> type, ArrayList<Integer> Def, ArrayList<Integer> CMV, ArrayList<Integer> HP, String BattleID){
+    public boolean startBattle(ArrayList<Integer> activedeck, ArrayList<String> enemyList, ArrayList<Integer> type, ArrayList<Integer> Def, ArrayList<Integer> CMV, ArrayList<Integer> HP){
         System.out.println("Combat start");
-        Random random = new Random();
         ArrayList<Integer> currentHand = new ArrayList<>();
         ArrayList<Integer> discarded = new ArrayList<>();
         ArrayList<Integer> drawpile = new ArrayList<>();
@@ -98,7 +114,9 @@ public class combat{
 
         int sumHpMax = sumHp; // so i can check if i need to spawn in second wave of enemies
         int turnTally = 0;
+        ArrayList<Integer> playerLastTurn = new ArrayList<>();
         while (sumHp > 0 || mainCharacter.getHp() == 0){
+            playerLastTurn.clear();
             if (turnTally % 3 ==0){
                 System.out.println("COIN TOSS EVENT");
                 // set up once access to coin class is avaliable in main
@@ -116,28 +134,148 @@ public class combat{
                     discarded.addAll(cards.discard());
                     ArrayList<Integer> Play = new ArrayList<>();
                     Play.addAll(cards.play());
+                    int moodV = mainCharacter.getCmv();
 
                     for (int cardId : Play) {
                         switch (Cards.cardDictionary.get(cardId).type) {
                             case 1: //aa
+                                int dmg = rollDice(Cards.cardDictionary.get(cardId).num, Cards.cardDictionary.get(cardId).dice );
+                                int dmg2 = rollDice(Cards.cardDictionary.get(cardId).num2, Cards.cardDictionary.get(cardId).dice2 );
                                 for (String enemy : combatOrder) {
                                     if (enemy != "Player"){
-                                        int dmg = rollDice(Cards.cardDictionary.get(cardId).num, Cards.cardDictionary.get(cardId).dice );
+                                        int temp = 0;
+                                        for (int i = 0; i <= enemyList.size(); i++){
+                                            if (enemy == enemyList.get(i)){
+                                                temp = i;
+                                            }
+                                        }
+                                        if(rollCMV(moodV) > temp){
+                                            aiList.get(temp).aiDmgTaken(dmg);
+                                            System.out.println( aiList.get(temp).getName() + "took " + dmg + "dmg");
+                                        }
+                                        else{
+                                            System.out.println("The First Action Failed");
+                                            break;
+                                        }
+                                    }
+                                }
+                                for (String enemy : combatOrder) {
+                                    if (enemy != "Player"){
+                                        int temp = 0;
+                                        for (int i = 0; i <= enemyList.size(); i++){
+                                            if (enemy == enemyList.get(i)){
+                                                temp = i;
+                                            }
+                                        }
+                                        int def = Def.get(temp);
+                                        if(rollCMV(moodV) > temp){
+                                            aiList.get(temp).aiDmgTaken(dmg2);
+                                            System.out.println( aiList.get(temp).getName() + "took " + dmg + "dmg");
+                                        }
+                                        else{
+                                            System.out.println("The Second Action Failed");
+                                            break;
+                                        }
                                     }
                                 }
                                 break;
                             case 2: //ad
+                                dmg = rollDice(Cards.cardDictionary.get(cardId).num, Cards.cardDictionary.get(cardId).dice );
+                                int defbst = rollDice(Cards.cardDictionary.get(cardId).num2, Cards.cardDictionary.get(cardId).dice2);
+                                for (String enemy : combatOrder) {
+                                    if (enemy != "Player"){
+                                        int temp = 0;
+                                        for (int i = 0; i <= enemyList.size(); i++){
+                                            if (enemy == enemyList.get(i)){
+                                                temp = i;
+                                            }
+                                        }
+                                        int def = aiList.get(temp).getDef();
+                                        if(rollCMV(moodV) > temp){
+                                            aiList.get(temp).aiDmgTaken(dmg);
+                                            System.out.println( aiList.get(temp).getName() + "took " + dmg + "dmg");
+                                        }
+                                        else{
+                                            System.out.println("The First Action Failed");
+                                            break;
+                                        }
+                                    }
+                                }
+                                mainCharacter.defBst(defbst);
+                                playerLastTurn.add(defbst);
+                                System.out.println("Def has been raised by" + defbst);
                                 break;
                             case 3: //da
+                                dmg = rollDice(Cards.cardDictionary.get(cardId).num2, Cards.cardDictionary.get(cardId).dice2 );
+                                defbst = rollDice(Cards.cardDictionary.get(cardId).num, Cards.cardDictionary.get(cardId).dice);
+                                for (String enemy : combatOrder) {
+                                    if (enemy != "Player"){
+                                        int temp = 0;
+                                        for (int i = 0; i <= enemyList.size(); i++){
+                                            if (enemy == enemyList.get(i)){
+                                                temp = i;
+                                            }
+                                        }
+                                        int def = aiList.get(temp).getDef();
+                                        if(rollCMV(moodV) > temp){
+                                            aiList.get(temp).aiDmgTaken(dmg);
+                                            System.out.println( aiList.get(temp).getName() + "took " + dmg + "dmg");
+                                        }
+                                        else{
+                                            System.out.println("The First Action Failed");
+                                            break;
+                                        }
+                                    }
+                                    mainCharacter.defBst(defbst);
+                                    playerLastTurn.add(defbst);
+                                    System.out.println("Def has been raised by" + defbst);
+                                }
+                                mainCharacter.defBst(defbst);
+                                playerLastTurn.add(defbst);
                                 break;
                             case 5: //ba
+                                int boostdmg = rollDice(Cards.cardDictionary.get(cardId).num, Cards.cardDictionary.get(cardId).dice );
+                                dmg = rollDice(Cards.cardDictionary.get(cardId).num2, Cards.cardDictionary.get(cardId).dice2 );
+                                for (String enemy : combatOrder) {
+                                    if (enemy != "Player"){
+                                        int temp = 0;
+                                        for (int i = 0; i <= enemyList.size(); i++){
+                                            if (enemy == enemyList.get(i)){
+                                                temp = i;
+                                            }
+                                        }
+                                        int def = Def.get(temp);
+                                        if(rollCMV(moodV) > temp){
+                                            aiList.get(temp).aiDmgTaken(dmg + boostdmg);
+                                            System.out.println( aiList.get(temp).getName() + "took " + dmg + "dmg");
+                                        }
+                                        else{
+                                            System.out.println("The Second Action Failed");
+                                            break;
+                                        }
+                                    }
+                                }
                                 break;
-                            default: //Type 4
+                            default: //dd type 4
+                                defbst = rollDice(Cards.cardDictionary.get(cardId).num, Cards.cardDictionary.get(cardId).dice );
+                                int defbst2 = rollDice(Cards.cardDictionary.get(cardId).num2, Cards.cardDictionary.get(cardId).dice2);
+                                mainCharacter.defBst(defbst + defbst2);
+                                playerLastTurn.add(defbst);
+                                playerLastTurn.add(defbst2);
+                                System.out.println("Def has been raised by" + defbst + " + " + defbst2);
                                 break;
                         }
                     }
                     
                     
+                }
+                else{
+                    int temp = 0;
+                    for (int i = 0; i <= enemyList.size(); i++){
+                    if (unit == enemyList.get(i)){
+                        temp = i;
+                    }
+
                 }
             }
         }
@@ -294,7 +432,7 @@ public class combat{
             for(int i = 0; i<num;i++){
                 sum += random.nextInt(1,sides + 1);
             }
-            
+
             return sum;
     }
     public static int rollCMV(int CMV){
