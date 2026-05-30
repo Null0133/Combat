@@ -6,15 +6,7 @@ import java.util.Collections;
 record diceResult(int sum, List<Integer> rolls) {}
 public class combat{
     character mainCharacter = new character();
-    public void main(String[] args) {   //replace main with the combat start string thingy also my main is going to be different to the main in the project
-        
-        Cards.cards();
-        System.out.println(Cards.getCardsByType(2).size());
-        System.out.println("2. Move to a new location");
-        System.out.println("3. Show inventory");
-        System.out.println("4. View and edit Card Deck"); // change debug to 5 when mearging
 
-    }
     private String BattleID;
 
     private int numberOfWaves;
@@ -29,6 +21,27 @@ public class combat{
     //passives etc, idk. u figure it out.
 
     //floor 1 room 1
+
+
+    public void main(String[] args) {   //replace main with the combat start string thingy also my main is going to be different to the main in the project
+        
+        Cards.cards();
+        System.out.println(Cards.getCardsByType(2).size());
+        System.out.println("2. Move to a new location");
+        System.out.println("3. Show inventory");
+        System.out.println("4. View and edit Card Deck"); // change debug to 5 when mearging
+        ArrayList<String> EmptyArray = new ArrayList<String>();
+        ArrayList<Integer> EmptyArrayi = new ArrayList<Integer>();
+        Battle("1", 1, EmptyArray, EmptyArray, EmptyArray, EmptyArrayi, EmptyArrayi, EmptyArrayi, EmptyArrayi);
+        ArrayList<String> EmptyArrayf = new ArrayList<String>();
+        EmptyArrayf.add("test");
+        EmptyArrayf.add("test2");
+        startBattle(mainCharacter.getDeck(), EmptyArrayf, EmptyArrayi, EmptyArrayi, EmptyArrayi, EmptyArrayi);
+    }
+
+
+
+    
     
 
 
@@ -48,8 +61,9 @@ public class combat{
 
     //// ADD INVENTORY WHEN MERGING (or ask kai if my thing is still tweaking)
     
-
-    public boolean startBattle(List<Integer> activedeck, int noEnemies, List<String> enemyList, List<Integer> type, List<Integer> Def, List<Integer> CMV, List<Integer> HP){
+    //all values that are not specifically maincharacter.XXX are enemy values 
+    public boolean startBattle(List<Integer> activedeck, List<String> enemyList, List<Integer> type, List<Integer> Def, List<Integer> CMV, List<Integer> HP){
+        System.out.println("Combat start");
         Random random = new Random();
         ArrayList<Integer> currentHand = new ArrayList<>();
         ArrayList<Integer> discarded = new ArrayList<>();
@@ -60,66 +74,23 @@ public class combat{
         List<Integer> Pop = drawpile.subList(drawpile.size() - 4, drawpile.size());
         currentHand.addAll(Pop);
         Pop.clear();
-
-        ArrayList<Ai> aiList = new ArrayList<>();
-        for (int i= 0; i <= noEnemies; i++){
-            aiList.add(new Ai(type.get(i), enemyList.get(i), HP.get(i), Def.get(i), CMV.get(i)));
-        }
+        System.out.println(currentHand);
+        System.out.println(drawpile);
 
         ArrayList<String> combatOrder = new ArrayList<>();
         combatOrder.add("Player");
         combatOrder.addAll(enemyList);
         Collections.shuffle(combatOrder);
+        System.out.println(combatOrder);
+
+        ArrayList<Ai> aiList = new ArrayList<>();
+        for (int i= 0; i <= enemyList.size(); i++){
+            aiList.add(new Ai(type.get(i), enemyList.get(i), HP.get(i), Def.get(i), CMV.get(i)));
+        }
 
         return false;
     }
-    public static int aiTree(int playerHp, int aiHp, int lowestAllyHp , int aiType){  //atk target must be specified outside of this (eg if when it goes thru the tree it decides to atk an ally here the ai must know that before this tree)
-        Random random = new Random();
-        Cards.cards();
-        int chosenCard = 1;
-        switch (aiType) {
-            case 0:
-                ///Add different types of Ai
-                break;
-            default:
-                if (aiHp < 11){
-                    if (playerHp<5){
-                        int length = Cards.getCardsByType(1).size();
-                        ArrayList<Integer> Temp = new ArrayList<>(Cards.getCardsByType(1));
-                        chosenCard = Temp.get(random.nextInt(1, length + 1));
-                    }
-                    else{ 
-                        if (lowestAllyHp!=0){
-                            if(lowestAllyHp<playerHp){  // only instance where we atk the ally
-                                int length = Cards.getCardsByType(1).size();
-                                ArrayList<Integer> Temp = new ArrayList<>(Cards.getCardsByType(1));
-                                chosenCard = Temp.get(random.nextInt(1, length + 1));
-                            }
-                            else {
-                                int length = Cards.getCardsByType(1).size() + Cards.getCardsByType(2).size() + Cards.getCardsByType(3).size();
-                                ArrayList<Integer> Temp = new ArrayList<>(Cards.getCardsByType(2));
-                                Temp.addAll(Cards.getCardsByType(2));
-                                Temp.addAll(Cards.getCardsByType(1));
-                                chosenCard = Temp.get(random.nextInt(1, length + 1));
-                            }
-                        }
-                        else{
-                            int length = Cards.getCardsByType(2).size() + Cards.getCardsByType(3).size();
-                            ArrayList<Integer> Temp = new ArrayList<>(Cards.getCardsByType(2));
-                            Temp.addAll(Cards.getCardsByType(2));
-                            chosenCard = Temp.get(random.nextInt(1, length + 1));
-                        }
-                    }
-                }
-                else{
-                    int length = Cards.getCardsByType(1).size();
-                    ArrayList<Integer> Temp = new ArrayList<>(Cards.getCardsByType(1));
-                    chosenCard = Temp.get(random.nextInt(1, length + 1));
-                }
-                break;
-        }///// ADD A CHANCE TO MAKE IT A RANDOM TYPE 1 2 3 CARD 
-        return chosenCard;
-    }
+    
     public static diceResult rollDice(int num,int sides){
 
             Random random = new Random();
@@ -127,25 +98,21 @@ public class combat{
             ArrayList<Integer> Rolls = new ArrayList<>();
 
             for(int i = 0; i<num;i++){
-                int role = random.nextInt(1,sides + 1);
-                Rolls.add(role);
-                sum += role;
+                int roll = random.nextInt(1,sides + 1);
+                Rolls.add(roll);
+                sum += roll;
             }
 
             return new diceResult(sum, Rolls);
     }
-    public static diceResult rollCMV(int num, int sides, int CMV){
-
-            Random random = new Random();
-            int sum = 0;
-            ArrayList<Integer> Rolls = new ArrayList<>();
-
-            for(int i = 0; i<num;i++){
-                int role = random.nextInt(1,sides + 1);
-                Rolls.add(role);
-                sum += role;
-            }
-
-            return new diceResult(sum, Rolls);
+    public static int rollCMV(int CMV){
+        int roll = 1;
+        int cm10 = CMV / 10;
+        Random random = new Random();
+        roll = random.nextInt(1, 20 + 1 + cm10);
+        if (roll>20){
+            roll = 20;
+        }
+        return roll;
     }    
 }
