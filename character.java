@@ -44,6 +44,9 @@ public class character { ///// Will use a ":green" coin as the only coin for now
     public void takeDmg(int dmgTaken){ //for healing just do negative dmg
         hp -= dmgTaken;
     }
+    public void changePwr(int pwrLost){ //for healing just do negative dmg
+        power -= pwrLost;
+    }
 
     public void showCardDeck(){
         System.out.println("\n =========Card Deck");

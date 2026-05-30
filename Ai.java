@@ -24,7 +24,7 @@ public class Ai {
         Cards.cards();
         int chosenCard = 1;
         switch (aiType) {
-            case 0:
+            case -1:
                 ///Add different types of Ai
                 break;
             default:
@@ -43,17 +43,25 @@ public class Ai {
                             }
                             else {
                                 int length = Cards.getCardsByType(1).size() + Cards.getCardsByType(2).size() + Cards.getCardsByType(3).size();
-                                ArrayList<Integer> Temp = new ArrayList<>(Cards.getCardsByType(2));
+                                ArrayList<Integer> Temp = new ArrayList<>(Cards.getCardsByType(3));
                                 Temp.addAll(Cards.getCardsByType(2));
                                 Temp.addAll(Cards.getCardsByType(1));
                                 chosenCard = Temp.get(random.nextInt(1, length + 1));
                             }
                         }
                         else{
-                            int length = Cards.getCardsByType(2).size() + Cards.getCardsByType(3).size();
-                            ArrayList<Integer> Temp = new ArrayList<>(Cards.getCardsByType(2));
-                            Temp.addAll(Cards.getCardsByType(2));
-                            chosenCard = Temp.get(random.nextInt(1, length + 1));
+                            int temp = random.nextInt(1,10);
+                            if (temp == 10){
+                                int length = Cards.getCardsByType(4).size();
+                                ArrayList<Integer> Temp = new ArrayList<>(Cards.getCardsByType(4));
+                                chosenCard = Temp.get(random.nextInt(1, length + 1));
+                            }
+                            else {
+                                int length = Cards.getCardsByType(2).size() + Cards.getCardsByType(3).size();
+                                ArrayList<Integer> Temp = new ArrayList<>(Cards.getCardsByType(2));
+                                Temp.addAll(Cards.getCardsByType(2));
+                                chosenCard = Temp.get(random.nextInt(1, length + 1));
+                            }
                         }
                     }
                 }
@@ -63,7 +71,15 @@ public class Ai {
                     chosenCard = Temp.get(random.nextInt(1, length + 1));
                 }
                 break;
-        }///// ADD A CHANCE TO MAKE IT A RANDOM TYPE 1 2 3 CARD 
+        }
+        int temp = random.nextInt(1,10);
+        if (temp == 10){
+            int length = Cards.getCardsByType(1).size() + Cards.getCardsByType(2).size() + Cards.getCardsByType(3).size();
+            ArrayList<Integer> Temp = new ArrayList<>(Cards.getCardsByType(3));
+            Temp.addAll(Cards.getCardsByType(2));
+            Temp.addAll(Cards.getCardsByType(1));
+            chosenCard = Temp.get(random.nextInt(1, length + 1));
+        }
         return chosenCard;
     }
 }

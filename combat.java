@@ -64,7 +64,7 @@ public class combat{
 
     //// ADD INVENTORY WHEN MERGING (or ask kai if my thing is still tweaking)
     
-    ///all values that are not specifically maincharacter XXX are enemy values 
+    ///all values that are not specifically maincharacter abc are enemy values
     public boolean startBattle(List<Integer> activedeck, List<String> enemyList, List<Integer> type, List<Integer> Def, List<Integer> CMV, List<Integer> HP){
         System.out.println("Combat start");
         Random random = new Random();
@@ -93,7 +93,10 @@ public class combat{
 
         return false;
     }////////////////////////////////INTEGRATE THE COIN TOSS EVERY THIRD TURN (for now make it give a random amount of power)(maybe randomize the buffs later)
-    public void playerTurn(ArrayList<Integer> currentHand, ArrayList<String> enemyList, ArrayList<Integer> enemyHp, ArrayList<String> combatOrder, int power){
+
+    public record playerOutputBundle(List<Integer> hand, List<Integer> discard, List<Integer> play) {} //used to get more than one array in out put 
+
+    public playerOutputBundle playerTurn(ArrayList<Integer> currentHand, ArrayList<String> enemyList, ArrayList<Integer> enemyHp, ArrayList<String> combatOrder, int power){ //player more or less picking their cards
         
         System.out.println("All Enemies In Combat Order"); //Displays the Combat order
         for (int i = 0; i<= enemyList.size() - 1; i++){
@@ -125,11 +128,11 @@ public class combat{
         ArrayList<Integer> playedCards = new ArrayList<>();
         ArrayList<Integer> discardedCards = new ArrayList<>();
         int input = 0;
-        while (input!=3){
+        while (input!=246){
             System.out.println("Please select an action: \n 1. Select Cards to discard \n 2. Select Cards to play \n 3. Veiw Cards Again \n 4.Submit Actions");
             input = scanner.nextInt();
             switch (input) {
-                case 1:
+                case 1: // discard
                     for (int i = 0; i <= 3; i++){
                         System.out.println("Card ID: " + currentHand.get(i));
                         System.out.print("Cost of card " + Cards.cardDictionary.get(currentHand.get(i)).cost);
@@ -142,7 +145,6 @@ public class combat{
                                 check++;
                                 if (currentHand.get(i) == card){
                                     System.out.print("You cannot discard a played card");
-                                    
                                     break;
                                 }
                             }
@@ -152,21 +154,86 @@ public class combat{
                             }
                         }
                         else{
-                            
+                            for (int card : discardedCards) {
+                                if (currentHand.get(i) == card){
+                                    System.out.print("Card has been undiscarded");
+                                    discardedCards.remove(card);
+                                    break;
+                                }
+                            }
                         }
                     }
                     break;
-                case 2:
+                case 2: //play
+                    for (int i = 0; i <= 3; i++){
+                        System.out.println("Card ID: " + currentHand.get(i));
+                        System.out.println("Cost of card " + Cards.cardDictionary.get(currentHand.get(i)).cost);
+                        System.out.println(Cards.cardDictionary.get(currentHand.get(i)).display);
+                        System.out.println("would you like to play this card? \n 1. Yes \n 2. No");
+                        int del = scanner.nextInt();
+                        if (del == 1){
+                            int check = 0;
+                            for (int card : discardedCards) {
+                                check++;
+                                if (currentHand.get(i) == card){
+                                    System.out.print("You cannot play a discarded card");
+                                    break;
+                                }
+                            }
+                            if (check == 3){
+                                if (mainCharacter.getPwr() > Cards.cardDictionary.get(currentHand.get(i)).cost){
+                                    System.out.print("The Card has been added to the to be played cards list");
+                                    playedCards.add(currentHand.get(i));
+                                    mainCharacter.changePwr(Cards.cardDictionary.get(currentHand.get(i)).cost);
+                                    System.out.print("This has consumed " + Cards.cardDictionary.get(currentHand.get(i)).cost + "power, you have " + mainCharacter.getPwr() + "power left");
+                                }
+                                
+                            }
+                        }
+                        else{
+                            for (int card : playedCards) {
+                                if (currentHand.get(i) == card){
+                                    System.out.print("Card has been taken out of the to be played list \n" + Cards.cardDictionary.get(currentHand.get(i)) + "power has been gained back, you now have " + mainCharacter.getPwr() + "Power left");
+                                    playedCards.remove(card);
+                                    break;
+                                }
+                            }
+                        }
+                    }
                     break;
-                case 3:
+                case 3: //veiw
+                    System.out.println("Dealt Cards"); //Displays the cards you have been given
+                    for (int i = 0; i<=3; i++){
+                        System.out.println("Card ID: " + currentHand.get(i));
+                        System.out.println("Cost of card " + Cards.cardDictionary.get(currentHand.get(i)).cost);
+                        System.out.println(Cards.cardDictionary.get(currentHand.get(i)).display);
+                    }
+                    if (discardedCards.size() > 0){
+                        System.out.println("Discarded Cards"); //Displays the cards you have been given
+                        for (int i = 0; i<=3; i++){
+                            System.out.println("Card ID: " + discardedCards.get(i));
+                            System.out.println("Cost of card " + Cards.cardDictionary.get(discardedCards.get(i)).cost);
+                            System.out.println(Cards.cardDictionary.get(discardedCards.get(i)).display);
+                        }
+                    }
+                    if (playedCards.size() > 0){
+                        System.out.println("Played Cards"); //Displays the cards you have been given
+                        for (int i = 0; i<=3; i++){
+                            System.out.println("Card ID: " + playedCards.get(i));
+                            System.out.println("Cost of card " + Cards.cardDictionary.get(playedCards.get(i)).cost);
+                            System.out.println(Cards.cardDictionary.get(playedCards.get(i)).display);
+                        }
+                    }
                     break;
-                case 4:
+                case 4: // move on
+                    input = 246;
                     break;
-                default:
+                default: //typo
                     System.out.println("Error please make sure you enter 1 2 or 3");
                    break;
             }
         }
+        return new playerOutputBundle(currentHand, discardedCards, playedCards);
         
     }
     
