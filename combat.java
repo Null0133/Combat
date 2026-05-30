@@ -28,9 +28,11 @@ public class combat{
     private ArrayList<Integer> EnemiesListHp;//max hp  
     //passives etc, idk. u figure it out.
 
+    //floor 1 room 1
+    
 
 
-    public void Battle(String BattleID, int numberOfWaves, /*Coin[] rewardedCoins,*/ ArrayList<String> rewardedPassives, ArrayList<String> rewardedKeyItems, ArrayList<String> EnemiesList, List<Integer> EnemiesListType, List<Integer> EnemiesListDef, List<Integer> EnemiesListCmv, List<Integer> EnemiesListHp){
+    public void Battle(String BattleID, int numberOfWaves, /*Coin[] rewardedCoins,*/ ArrayList<String> rewardedPassives, ArrayList<String> rewardedKeyItems, ArrayList<String> EnemiesList, ArrayList<Integer> EnemiesListType, ArrayList<Integer> EnemiesListDef, ArrayList<Integer> EnemiesListCmv, ArrayList<Integer> EnemiesListHp){
 
         this.BattleID = BattleID;
         this.numberOfWaves = numberOfWaves;
@@ -38,35 +40,40 @@ public class combat{
         this.rewardedKeyItems = rewardedKeyItems;
         this.rewardedPassives = rewardedPassives;
         this.EnemiesList = EnemiesList;
-        this.EnemiesListType = EnemiesListType;
+        this.EnemiesListType = EnemiesListType;  //basically moving setup of enemies to 
         this.EnemiesListDef = EnemiesListDef;
         this.EnemiesListCmv = EnemiesListCmv;
         this.EnemiesListHp = EnemiesListHp;
-
-        ArrayList<Integer> activedeck = mainCharacter.getDeck();
-        combatInt1(activedeck, EnemiesList.size(), EnemiesList, EnemiesListType, EnemiesListDef, EnemiesListCmv, EnemiesListHp);
     }
 
     //// ADD INVENTORY WHEN MERGING (or ask kai if my thing is still tweaking)
-    public static DUNNO combatInt1(List<Integer> activedeck, int noEnemies, List<String> enemyList, List<Integer> type, List<Integer> Def, List<Integer> CMV, List<Integer> HP){
+    
+
+    public boolean startBattle(List<Integer> activedeck, int noEnemies, List<String> enemyList, List<Integer> type, List<Integer> Def, List<Integer> CMV, List<Integer> HP){
         Random random = new Random();
         ArrayList<Integer> currentHand = new ArrayList<>();
         ArrayList<Integer> discarded = new ArrayList<>();
         ArrayList<Integer> drawpile = new ArrayList<>();
+
+        drawpile.addAll(activedeck);
+        Collections.shuffle(drawpile);
+        List<Integer> Pop = drawpile.subList(drawpile.size() - 4, drawpile.size());
+        currentHand.addAll(Pop);
+        Pop.clear();
 
         ArrayList<Ai> aiList = new ArrayList<>();
         for (int i= 0; i <= noEnemies; i++){
             aiList.add(new Ai(type.get(i), enemyList.get(i), HP.get(i), Def.get(i), CMV.get(i)));
         }
 
-        ArrayList<String> combatOrderTxt = new ArrayList<>();
-        combatOrderTxt.add("Player");
-        combatOrderTxt.addAll(enemyList);
-        Collections.shuffle(combatOrderTxt);
+        ArrayList<String> combatOrder = new ArrayList<>();
+        combatOrder.add("Player");
+        combatOrder.addAll(enemyList);
+        Collections.shuffle(combatOrder);
 
-        
+        return false;
     }
-    public static int aiTurn(int playerHp, int aiHp, int lowestAllyHp , int aiType){  //atk target must be specified outside of this (eg if when it goes thru the tree it decides to atk an ally here the ai must know that before this tree)
+    public static int aiTree(int playerHp, int aiHp, int lowestAllyHp , int aiType){  //atk target must be specified outside of this (eg if when it goes thru the tree it decides to atk an ally here the ai must know that before this tree)
         Random random = new Random();
         Cards.cards();
         int chosenCard = 1;
