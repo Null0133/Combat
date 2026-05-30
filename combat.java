@@ -84,7 +84,7 @@ public class combat{
 
         ArrayList<Ai> aiList = new ArrayList<>();
         for (int i= 0; i <= enemyList.size(); i++){
-            aiList.add(new Ai(type.get(i), enemyList.get(i), HP.get(i), Def.get(i), CMV.get(i)));
+            aiList.add(new Ai(type.get(i), enemyList.get(i), HP.get(i), Def.get(i), CMV.get(i),0));
         }
 
         //creating a sum of HP for win/ lose / move on to next wave conditions
@@ -102,6 +102,7 @@ public class combat{
             if (turnTally % 3 ==0){
                 System.out.println("COIN TOSS EVENT");
                 // set up once access to coin class is avaliable in main
+                // potentially make it a random buff instead of power return
                 mainCharacter.changePwr(-3); //-3 because it takes the value and subtracts it from the power value
             }
             if (waves == 1 && sumHpMax/2<= sumHp){
@@ -111,12 +112,37 @@ public class combat{
             for (String unit : combatOrder) {
                 if (unit == "Player"){
                     playerOutputBundle cards =  playerTurn(currentHand, enemyList, HP, combatOrder);
+                    currentHand.addAll(cards.hand());
+                    discarded.addAll(cards.discard());
+                    ArrayList<Integer> Play = new ArrayList<>();
+                    Play.addAll(cards.play());
+
+                    for (int cardId : Play) {
+                        switch (Cards.cardDictionary.get(cardId).type) {
+                            case 1: //aa
+                                for (String enemy : combatOrder) {
+                                    if (enemy != "Player"){
+                                        int dmg = rollDice(Cards.cardDictionary.get(cardId).num, Cards.cardDictionary.get(cardId).dice );
+                                    }
+                                }
+                                break;
+                            case 2: //ad
+                                break;
+                            case 3: //da
+                                break;
+                            case 5: //ba
+                                break;
+                            default: //Type 4
+                                break;
+                        }
+                    }
+                    
                     
                 }
             }
         }
-         return false;
-    }////////////////////////////////INTEGRATE THE COIN TOSS EVERY THIRD TURN (for now make it give a random amount of power)(maybe randomize the buffs later)
+        return false;
+    }
 
     public record playerOutputBundle(List<Integer> hand, List<Integer> discard, List<Integer> play) {} //used to get more than one array in out put 
 
@@ -261,19 +287,15 @@ public class combat{
         
     }
     
-    public static diceResult rollDice(int num,int sides){
-
+    public static int rollDice(int num,int sides){
             Random random = new Random();
             int sum = 0;
-            ArrayList<Integer> Rolls = new ArrayList<>();
 
             for(int i = 0; i<num;i++){
-                int roll = random.nextInt(1,sides + 1);
-                Rolls.add(roll);
-                sum += roll;
+                sum += random.nextInt(1,sides + 1);
             }
-
-            return new diceResult(sum, Rolls);
+            
+            return sum;
     }
     public static int rollCMV(int CMV){
         int roll = 1;

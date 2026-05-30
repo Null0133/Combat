@@ -3,20 +3,30 @@ import java.util.Random;
 
 // This class handles most enemy related thing such as creation and their desicion tree
 public class Ai {
-    public int aiType;
-    public String name;
-    public int aiHealth;
-    public int aiHealthMax;
-    public int aiDef;
-    public int aiCMV;
+    private int aiType;
+    private String name;
+    private int aiHealth;
+    private int aiHealthMax;
+    private int aiDef;
+    private int aiCMV;
+    private int lastCard;
 
-    public Ai(int aiType, String name, int aiHealthMax, int aiDef, int aiCMV){
+    public Ai(int aiType, String name, int aiHealthMax, int aiDef, int aiCMV, int lastCardUsed){
         this.name = name;
         this.aiHealth = aiHealthMax;
         this.aiHealthMax = aiHealthMax;
         this.aiDef = aiDef;
         this.aiCMV = aiCMV;
+        this.lastCard = lastCardUsed;
     }
+
+    public void aiDmgTaken(int dmgtaken){
+        aiHealth -= dmgtaken;
+    }
+    public String getName(){
+        return name;
+    }
+
     // Ai thought process different types of ai will have slightly different priorities in the trees based of their factions description
     // I did make it a bit dumb so that the game is begginer freindly without hours upon hours of testing and balancing the cards
     public static int aiTree(int playerHp, int aiHp, int lowestAllyHp , int aiType){  //atk target must be specified outside of this (eg if when it goes thru the tree it decides to atk an ally here the ai must know that before this tree)

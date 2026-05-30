@@ -9,7 +9,7 @@ public class Cards{
     public static void cards(){ //Defining all cards 
 
         //discard faction is fortuna 
-
+        cardDictionary.put(1, new CardDetails(1,0,4,0,6,"Empty",0)); //Used for toubleshooting and ai default
         cardDictionary.put(1, new CardDetails(1,1,4,1,6,"1d4 a 1d6 a",1)); //Base Deck Given to player who finished the tutorial   
         cardDictionary.put(2, new CardDetails(1,1,6,2,4,"1d6 a 2d4 a",1)); 
         cardDictionary.put(3, new CardDetails(2,1,4,1,4,"1d4 a 1d4 d(1)",1));        
@@ -19,9 +19,7 @@ public class Cards{
         cardDictionary.put(7, new CardDetails(4,1,4,1,6,"1d4 d1 1d6 d2",1));        
         cardDictionary.put(8, new CardDetails(4,1,12,2,4,"1d12 d2 1d4 d1",1)); 
         cardDictionary.put(9, new CardDetails(5,1,4,1,4,"1d4 b 1d4 a",1));        
-        cardDictionary.put(10, new CardDetails(5,1,2,2,4,"1d2 b 2d4 a",1)); 
-        cardDictionary.put(11, new CardDetails(6,1,2,1,6,"1d2 a 1d6 b",1));        
-        cardDictionary.put(12, new CardDetails(6,1,2,2,4,"1d2 a 1d4 b",1)); //Base Deck Ends
+        cardDictionary.put(10, new CardDetails(5,1,2,2,4,"1d2 b 2d4 a",1)); //Base Deck Ends
     }
 
     //Allows me to get all cards of a certain type (used for the ai)
