@@ -1,7 +1,5 @@
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 public class character { ///// Will use a ":green" coin as the only coin for now will implement coins when merging (remind me if i forget)
     //attributes
@@ -39,9 +37,8 @@ public class character { ///// Will use a ":green" coin as the only coin for now
         hp -= dmgTaken;
     }
 
-    public void showInventory() {
-        System.out.println("\n =========Inventory");
-    
+    public void showCardDeck(){
+        System.out.println("\n =========Card Deck");
         System.out.println(" === Active Card Deck === ");
         for (Integer card : activeDeck) {
             String CardDets = Cards.cardDictionary.get(card).display;
@@ -56,5 +53,6 @@ public class character { ///// Will use a ":green" coin as the only coin for now
                 System.out.println(CardDets);
             }
         }
+        // add deck edititing
     }
 }
