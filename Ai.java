@@ -23,6 +23,12 @@ public class Ai {
     public void aiDmgTaken(int dmgtaken){
         aiHealth -= dmgtaken;
     }
+    public void defenceBoost(int def){
+        aiDef -= def;
+    }
+    public void aiLC(int card){
+        lastCard = card;
+    }
     public int getType(){
         return aiType;
     }

@@ -276,7 +276,63 @@ public class combat{
                         temp = i;
                     }
 
+                    int lowestHp = 20;
+                    for (i = 0; i <= HP.size(); i++){
+                        if (lowestHp > HP.get(i)){
+                            lowestHp = HP.get(i);
+                        }
+                    }
+                    int cardId = Ai.aiTree(mainCharacter.getHp(), aiList.get(temp).getHP(), lowestHp, aiList.get(temp).getType());
+                    aiList.get(temp).aiLC(cardId);
+                    switch (Cards.cardDictionary.get(cardId).type) {
+                            case 1: //aa
+                                int dmg = rollDice(Cards.cardDictionary.get(cardId).num, Cards.cardDictionary.get(cardId).dice );
+                                int dmg2 = rollDice(Cards.cardDictionary.get(cardId).num2, Cards.cardDictionary.get(cardId).dice2 );
+                                if (mainCharacter.getDef() <= rollCMV(aiList.get(temp).getDef())){
+                                    mainCharacter.takeDmg(dmg +dmg2);
+                                    System.out.println(aiList.get(temp).getName() + "did " + dmg + " + " + dmg2 + " dmg" );
+                                }
+                               
+                            case 2: //ad
+                                dmg = rollDice(Cards.cardDictionary.get(cardId).num, Cards.cardDictionary.get(cardId).dice );
+                                int defbst = rollDice(Cards.cardDictionary.get(cardId).num2, Cards.cardDictionary.get(cardId).dice2);
+                                aiList.get(temp).defenceBoost(defbst);
+                                playerLastTurn.add(defbst);
+                                System.out.println("Def has been raised by" + defbst + " for " + aiList.get(temp).getName());
+                                if (mainCharacter.getDef() <= rollCMV(aiList.get(temp).getDef())){
+                                    mainCharacter.takeDmg(dmg);
+                                    System.out.println(aiList.get(temp).getName() + "did " + dmg +" dmg" );
+                                }
+                            
+                                break;
+                            case 3: //da
+                                dmg = rollDice(Cards.cardDictionary.get(cardId).num, Cards.cardDictionary.get(cardId).dice );
+                                defbst = rollDice(Cards.cardDictionary.get(cardId).num2, Cards.cardDictionary.get(cardId).dice2);
+                                aiList.get(temp).defenceBoost(defbst);
+                                playerLastTurn.add(defbst);
+                                System.out.println("Def has been raised by" + defbst + " for " + aiList.get(temp).getName());
+                                if (mainCharacter.getDef() <= rollCMV(aiList.get(temp).getDef())){
+                                    mainCharacter.takeDmg(dmg);
+                                    System.out.println(aiList.get(temp).getName() + "did " + dmg +" dmg" );
+                                }
+                                break;
+                            default: //dd type 4
+                                defbst = rollDice(Cards.cardDictionary.get(cardId).num, Cards.cardDictionary.get(cardId).dice );
+                                int defbst2 = rollDice(Cards.cardDictionary.get(cardId).num2, Cards.cardDictionary.get(cardId).dice2);
+                                mainCharacter.defBst(defbst + defbst2);
+                                playerLastTurn.add(defbst);
+                                playerLastTurn.add(defbst2);
+                                System.out.println("Def has been raised by" + defbst + " + " + defbst2);
+                                break;
+                    }
+
                 }
+            }
+            }
+            System.out.println("Would you like to skip this battlle (x for yes anything else is a no)?");
+            String skip = scanner.next();
+            if (skip == "x"){
+                break;
             }
         }
         return false;
